@@ -7,7 +7,19 @@
     <!-- Jquery library   ---->
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-
+<script>
+    $(document).ready(function() {
+        $('body').hide().fadeIn(3000,function(){alert("done!");});
+        $('img').hide();
+        $('h1').keyup(function(e){
+            
+            //$(this).slideUp();
+            console.log(e.keyCode);
+            $(this).text("changed");
+            $(this).parent().children('p').slideToggle();
+        }); 
+        });
+</script>
 
 </head>
 
@@ -21,7 +33,7 @@
             <p>
                 Please display a hello world message in JavaScript. 
                 <script>
-                    document.title = "JavaScript Basic -- In class practice -- Ethan Lea";
+                    document.title = "JavaScript Basic -- In class practice -- Ethan Lea"
                     // use document.write to display a message
                     document.write("Welcome to JavaScriptprogramming")
 
@@ -183,6 +195,30 @@
             </p>
 
             <script type="text/javascript">
+                //Event handler : change -> getprice
+                function getprice() {
+                    //input
+                    var yearCar = document.getElementById('year').value;
+                    var conditionCar = document.getElementById('condition').value;
+                    var price = 0;
+                    //make decisions
+                    if(yearCar == "2003" && conditionCar == "Fair"){
+                        price = 2000;
+                    } else if(yearCar == "2003" && conditionCar == "Good"){
+                        price = 3000;
+                    } else if(yearCar == "2004" && conditionCar == "Fair"){
+                        price = 4000;
+                    } else {
+                        price = 4500;
+                    }
+
+                    //output
+                    document.getElementById('price').textContent=price.toString();
+                }
+
+                //Register event 
+                document.getElementById('year').addEventListener('change',getprice,false); 
+                document.getElementById('condition').addEventListener('change',getprice,false);
 
 
 
@@ -195,6 +231,25 @@
             <p> Choose your favorite theme(warm, cool, hot)
                 <input type="text" id="theme">
             </p>
+            <script>
+                //Event handler blur ---> changeColor
+                function changeColor(){
+                    var theme = document.getElementById('theme').value;
+                    var bcolor = "white";
+                    switch(theme){
+                        case "warm": bcolor = "green"; break;
+                        case "hot": bcolor = "red"; break;
+                        case "cool": bcolor = "blue"; break;
+                        case "chilly": bcolor = "purple"; break;
+                        default :
+                            bcolor = "white";
+                    }
+                    document.body.setAttribute("style","background-color:"+bcolor);
+                    
+                }
+                //register event
+                document.getElementById('theme').addEventListener('blur',changeColor,false);
+            </script>
 
         </div>
 
@@ -219,11 +274,44 @@
 
             </p>
             <p>
-                <input type="button" value="Check Premium">
+                <input type="button" value="Check Premium" id="pbutton">
             </p>
-            <p id="result">
+            <p id="premium">
 
             </p>
+            <script>
+                //get the input range
+                document.getElementById('pbutton').addEventListener('click',getpremium)
+                
+                function getpremium(){
+                    //get the readio button value
+                    var e1 = document.querySelector('input[name="coverage"]:checked');
+                    var coverage = parseInt(e1.value);
+                    console.log(coverage);
+                    //get the vlaue from selection box
+                    var e2 = document.getElementById("agegroup").selectedIndex;
+                    console.log("the index is "+ e2);
+                    //process
+                    //make decision
+                    var agefactor = 0;
+                    switch(e2){
+                        case 0: agefactor = 0.08; break;
+                        case 1: agefactor = 0.09; break;
+                        case 2: agefactor = 0.11; break;
+                        case 3: agefactor = 0.17; break;
+                    }
+                    //calculate the insurance cost
+                    var premium = 10 + agefactor * coverage /1000 ;
+                    document.getElementById('premium').textContent=premium.toString();
+               
+                }
+                document.getElementsByName('coverage').addEventListener('change',)
+                
+               
+
+                
+            </script>
+          
 
         </div>
 
@@ -235,8 +323,32 @@
             <p> Display the square of numer 1... N </p>
             <p> N = <input type="number" min="1" max="10" id="inputnumber1"> </p>
             <p>
-                <input type="button" value="Click for Square">
+                <input type="button" id="csquare" value="Click for Square">
             </p>
+            <p id="resultsquare">
+
+            </p>
+            <script>
+                //bind event
+                document.querySelector('#csquare').addEventListener('click',dosquare);
+                var result = "";
+                //event handler
+                function dosquare(){
+                    var N = parseInt(document.getElementById('inputnumber1').value);
+                    result +="<table>";
+                    for(var i=1; i<=9;i++){
+                        result +="<tr>";
+                        for(var j = 1; j<=9;j++){
+                        var isquare = i*j;
+                        result +="<td>"+ i + " * " + j + " = "+ isquare+"</td";
+                        }
+                        result +="/<tr>";
+                    }
+                    result += "</table";
+                    document.getElementById('resultsquare').innerHTML=result;
+                }
+            </script>
+
 
         </div>
 
@@ -248,7 +360,7 @@
             <p>
                 <input type="button" value="Click for multiplication table">
             </p>
-
+            
             <!-- output section -->
             <div id="output">
 
@@ -279,7 +391,7 @@
         <div class="practice">
             <h1>Change Attribute -- Rolling a dice </h1>
             <p> <input type="button" id="roll" value="roll" /> </p>
-            <p> <img src="img/die1.png"> </p>
+            <p> <img id="dieimage" src="img/die1.png"> </p>
             <table>
                 <tr>
                     <th>Result</th>
@@ -300,6 +412,22 @@
                     <td id="r6"></td>
                 </tr>
             </table>
+            <script>
+                //event - click the button
+                document.getElementById("roll").addEventListener('click',rolldice);
+
+                //event handler - roll dice
+                var stats = [0,0,0,0,0,0]
+                function rolldice(){
+                    console.log("action works");
+                    var e1 = document.getElementById('dieimage');
+                    var n = Math.floor(Math.random()*6+1);
+                    e1.setAttribute("src","img/die"+n+".png");
+                    stats[n-1]++;
+                    //display the number in the right place
+                    document.getElementById('r'+n).textContent=stats[n-1].toString();
+                }
+            </script>
 
         </div>
 
@@ -321,6 +449,18 @@
             <div class="img-container-hide">
                 <img src="img/usca5.jpg" alt="usca">
             </div>
+            <script>
+                var index = 0; //show the image
+                var imglist = docoment.querySelectorAll('.img-container-hide');
+                //state animation
+                setInterval(changepic,3000);
+                function changepic(){
+                    imglist[index].setAttribute('class','.img-container-hide');
+                    index++;
+                    index = index % 5;
+                    imglist[index].setAttribute('class','img-container');
+                }
+            </script>
 
         </div>
 
